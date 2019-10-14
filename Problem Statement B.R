@@ -12,12 +12,15 @@ summary(madesedata)
 mean(madesedata$teach_white_pct, na.rm = TRUE) #Measures the central tendency
 median(madesedata$teach_white_pct, na.rm = TRUE) #Measures the central tendency
 sd(madesedata$teach_white_pct, na.rm = TRUE) #Measures the spread
+var(madesedata$teach_white_pct, na.rm= TRUE)
 summary(madesedata$teach_white_pct) #Measures the spread 
 ggplot(madesedata, aes(x =teach_white_pct )) + geom_histogram() + xlab('Percentage of white teachers in schools')
 
 mean(madesedata$stud_white_pct, na.rm = TRUE)
 median(madesedata$stud_white_pct, na.rm = TRUE)
+
 sd(madesedata$stud_white_pct, na.rm = TRUE)
+var(madesedata$stud_white_pct, na.rm = TRUE)
 summary(madesedata$stud_white_pct)
 ggplot(madesedata, aes(x =stud_white_pct )) + geom_histogram() + xlab('Percentage of white students in schools')
 
