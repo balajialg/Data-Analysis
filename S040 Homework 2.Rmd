@@ -1,0 +1,59 @@
+#---
+#title: "R Notebook"
+#output: html_notebook
+#---
+install.packages('readstata13') 
+library(readstata13)
+library(ggplot2)
+library(foreign)
+
+#Reading all the library packages required to read data, perform operations and visualize the results
+
+#Do state achievement scores predict college attendance? What is the association between district average MCAS scores and the percentage of students who enroll in college?
+
+#### 0 ####
+madese$score <- (madese$score_math + madese$score_ela)/2
+summary(madese$score)
+sd(madese$score, na.rm = TRUE)
+
+#Created a single measure of performance for each school district as MCAS score combining their math and ela scores
+
+#### 1 ####
+summary(madese$score)
+sd(madese$score, na.rm = TRUE)
+ggplot(madese, aes(x = score )) + geom_histogram(binwidth = 2) + xlab('Measure of MCAS performance across school districts')
+#Measured the center (Mean, Median through Summary()),Spread(Standard deviation through sd() and Interquartile range through Summary()) of MCAS scores across school districts in Massachussets and visualized it via histogram
+
+summary(madese$college_pct)
+median(madese$college_pct, na.rm = TRUE)
+sd(madese$college_pct, na.rm= TRUE)
+ggplot(madese, aes(x = college_pct )) + geom_histogram() + xlab('Percentage of students planning to enrol in College across school districts')
+#Measured the center (Mean, Median through Summary()),Spread(Standard deviation through sd() and Interquartile range through Summary()) of college enrolment % across school districts in Massachussets and visualized it via histogram
+
+ggplot(madese, aes(x = score , y = college_pct)) + geom_point() + xlab('Measure of MCAS performance across school districts') + ylab('Percentage of students planning to enrol in College across school districts')
+#Plotted a scatterplot through ggplot() to visualize the relationship between college enrolment % and MCAS scores across school districts in Massachussets
+
+cor.test(madese$college_pct,madese$score)
+#Performed the correlation test between college percentage and MCAS scores to identify the strength of the association between 2 variables
+summary(lm(college_pct ~ score, data = madese, na.action = 'na.exclude'))
+#Created a statistical model by Performing a regression of college percentage on scores and found the intercept, slope and Rsquare values for the two variables
+
+ggplot(madese, aes(x = score , y = college_pct)) + geom_point() + geom_smooth(method = lm, se= FALSE) + xlab('Measure of MCAS performance across school districts') + ylab('Percentage of students planning to enrol in College across school districts') 
+#Visualize the regression line as part of the scatter plot between college percentage and MCAS scores 
+
+madese$district_name
+#Identified the list of district names along with its index
+predicted_value[202] #Malden
+#Using the regression equation, predicting the number of students who will enrol into college from the district of Malden
+madese$college_pct[202]
+#Actual percentage of students who enrolled into college from Malden
+
+predicted_value[219] #Medford
+#Using the regression equation, predicting the number of students who will enrol into college from the district of Medford
+madese$college_pct[219]
+#Actual percentage of students who enrolled into college from Medford
+
+predicted_value[226] #Milford
+#Using the regression equation, predicting the number of students who will enrol into college from the district of  #Milford
+madese$college_pct[226]
+#Actual percentage of students who enrolled into college from #Milford
