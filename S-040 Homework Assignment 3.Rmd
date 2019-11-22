@@ -1,0 +1,48 @@
+#---
+#title: "R Notebook"
+#output: html_notebook
+#---
+
+install.packages('readstata13') 
+library(readstata13)
+library(ggplot2)
+library(foreign)
+library(texreg)
+
+#Read all the packages required to read data (readstata13, foreign) and visualize the inputted data(ggplot2)
+
+#Research Question - Is the association between state achievement scores and college attendance statistically significant?”
+
+rm(list = ls())
+madese <- read.dta('https://www.dropbox.com/s/6jes28kc3yuo455/madese.dta?dl=1')
+#Clear the environment variables and read the madese data from dataset stored in dropbox to the R environment
+
+#### Testing the relationship between predictor and outcome
+madese$score <- (madese$score_math + madese$score_ela)/2
+summary(madese$score)
+sd(madese$score, na.rm=TRUE)
+ggplot(madese, aes(x = score )) + geom_histogram(binwidth = 2) + xlab('Measure of MCAS performance across school districts')
+#Measured the center (Mean, Median through Summary()),Spread(Standard deviation through sd() and Interquartile range through Summary()) of MCAS scores across school districts in Massachussets and visualized it via histogram
+
+summary(madese$college_pct)
+sd(madese$college_pct, na.rm=TRUE)
+ggplot(madese, aes(x = college_pct )) + geom_histogram() + xlab('Percentage of students planning to enrol in College across school districts')
+across school districts')
+#Measured the center (Mean, Median through Summary()),Spread(Standard deviation through sd() and Interquartile range through Summary()) of college enrolment % across school districts in Massachussets and visualized it via histogram
+
+ggplot(madese, aes(x = score , y = college_pct)) + geom_point() + xlab('Measure of MCAS performance across school districts') + ylab('Percentage of students planning to enrol in College across school districts')
+#Plotted a scatterplot through ggplot() to visualize the relationship between college enrolment % and MCAS scores across school districts in Massachussets
+
+regmodel = lm(college_pct ~ score, data = madese, na.action = 'na.exclude')
+#Created a statistical model by performing a regression of college percentage on district average MCAS scores from madese dataset
+ 
+regmodelsummary =  summary(lm(college_pct ~ score, data = madese, na.action = 'na.exclude'))
+#Summary statistic to explain the regression parameters including the confidence interval
+confint(regmodel)
+
+madese[c('ci_lower', 'ci_upper')] <- predict(regmodel, interval = 'confidence')[, 2:3]
+# get predicted values of the confidnce interval from the model and cheeck the CI for the below mentioned districts
+#Westbridgewater - 384
+#Holyoke - 167
+#Lexington - 187
+
